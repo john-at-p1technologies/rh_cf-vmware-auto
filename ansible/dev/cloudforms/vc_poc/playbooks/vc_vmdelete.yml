@@ -1,0 +1,42 @@
+---
+  # vim: set ft=ansible et ts=2 sw=2:
+  #
+  # Create a new VM from a template using the new vmware_guest module
+  - name: VM from template
+    hosts: local
+    gather_facts: false
+    connection: local
+    vars:
+      vc_hname: mgmt-vc02.labs.p1technologies.com
+      dc_name: "p1-labs"
+      vmfolder: "p1-labs/vm/Vast_Comm/CF_POC"
+      name:
+        - "{{ vm1 }}"
+        - "{{ vm2 }}"
+        - "{{ vm3 }}"
+      dumpfacts: False
+    tasks:
+      - name: Shutdown VM
+        vmware_guest:
+          validate_certs: no
+          hostname: '{{ vc_hname }}'
+          username: '{{ vc_uname }}'
+          password: '{{ vc_passwd }}'
+          datacenter: '{{ dc_name }}'
+          name: '{{ item }}'
+          folder: '{{ vmfolder }}'
+          state: poweredoff
+        with_items: "{{ name }}"
+        delegate_to: localhost
+      - name: Remove a VM
+        vmware_guest:
+          validate_certs: no
+          hostname: '{{ vc_hname }}'
+          username: '{{ vc_uname }}'
+          password: '{{ vc_passwd }}'
+          datacenter: '{{ dc_name }}'
+          name: '{{ item }}'
+          folder: '{{ vmfolder }}'
+          state: absent
+        with_items: "{{ name }}"
+        delegate_to: localhost

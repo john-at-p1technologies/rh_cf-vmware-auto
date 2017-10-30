@@ -1,0 +1,47 @@
+---
+  # vim: set ft=ansible et ts=2 sw=2:
+  #
+  # Create a new VM from a template using the new vmware_guest module
+  - name: VM from template
+    hosts: local
+    gather_facts: false
+    connection: local
+    vars:
+      vc_hname: mgmt-vc02.labs.p1technologies.com
+      vcenter_dc: "p1-labs"
+      disk_size: 50
+      disk_type: thin
+      disk_ds: shared
+      net_type: "static"
+      net_dev: "vmxnet3"
+      net_name: "Lab-VLAN50_ansible"
+      net_vlan: "50"
+      net_mask: "255.255.255.0"
+      net_gw: "192.168.50.254"
+      vmcluster: "Lab Cluster"
+      vmfolder: "p1-labs/vm/Vast_Comm/CF_POC"
+      dumpfacts: False
+    tasks:
+      - name: Check for required variables
+        fail: msg="Must pass name_1, net1ip and vm1templ to -e"
+        when: name_1 is not defined or net1ip is not defined or vm1templ is not defined
+
+      - name: Check for vSphere access parameters
+        fail: msg="Must set vc_uname and vc_passwd in a Vault"
+        when: (vc_uname is not defined) or (vc_passwd is not defined)
+
+  - include: vc1_vmcreate.yml 
+      net_ip={{ net1ip }}
+      name={{ name_1 }}
+      vmtemplate={{ vm1templ }}
+
+  - include: vc2_vmcreate.yml 
+      net_ip={{ net2ip }}
+      name={{ name_2 }}
+      vmtemplate={{ vm2templ }}
+
+  - include: vc3_vmcreate.yml 
+      net_ip={{ net3ip }}
+      name={{ name_3 }}
+      vmtemplate={{ vm3templ }}
+
