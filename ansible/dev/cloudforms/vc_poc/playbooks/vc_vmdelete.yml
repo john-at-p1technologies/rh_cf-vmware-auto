@@ -11,9 +11,9 @@
       dc_name: "p1-labs"
       vmfolder: "p1-labs/vm/Vast_Comm/CF_POC"
       name:
-        - "{{ vm1 }}"
-        - "{{ vm2 }}"
-        - "{{ vm3 }}"
+        - "{{ name_1 }}"
+        - "{{ name_2 }}"
+        - "{{ name_3 }}"
       dumpfacts: False
     tasks:
       - name: Shutdown VM
