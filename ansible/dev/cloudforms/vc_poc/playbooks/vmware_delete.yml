@@ -8,8 +8,6 @@
     connection: local
     vars:
       vc_hname: mgmt-vc02.labs.p1technologies.com
-      vc_uname: "LABS\\johna"
-      vc_passwd: "Verb947#City"
       vmfolder: "p1-labs/vm/Vast_Comm/CF_POC"
       dumpfacts: False
     tasks:

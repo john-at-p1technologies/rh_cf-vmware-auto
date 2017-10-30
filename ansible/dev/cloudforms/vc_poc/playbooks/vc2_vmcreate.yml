@@ -7,9 +7,7 @@
     gather_facts: false
     connection: local
     vars:
-      vcenter_hostname: mgmt-vc02.labs.p1technologies.com
-      vcenter_user: "LABS\\johna"
-      vcenter_pass: "Verb947#City"
+      vc_hname: mgmt-vc02.labs.p1technologies.com
       vcenter_dc: "p1-labs"
       disk_size: 50
       disk_type: thin
@@ -20,7 +18,6 @@
       net_vlan: "50"
       net_mask: "255.255.255.0"
       net_gw: "192.168.50.254"
-      vmtemplate: rhel73_TEMPLATE
       vmcluster: "Lab Cluster"
       vmfolder: "p1-labs/vm/Vast_Comm/CF_POC"
       dumpfacts: False
@@ -30,15 +27,15 @@
         when: name is not defined or net_ip is not defined or vmtemplate is not defined
 
       - name: Check for vSphere access parameters
-        fail: msg="Must set vcenter_user and vcenter_pass in a Vault"
-        when: (vcenter_user is not defined) or (vcenter_pass is not defined)
+        fail: msg="Must set vc_uname and vc_passwd in a Vault"
+        when: (vc_uname is not defined) or (vc_passwd is not defined)
         
       - name: Create VM from template
         vmware_guest:
           validate_certs: False
-          hostname: "{{ vcenter_hostname }}"
-          username: "{{ vcenter_user }}"
-          password: "{{ vcenter_pass }}"
+          hostname: "{{ vc_hname }}"
+          username: "{{ vc_uname }}"
+          password: "{{ vc_passwd }}"
           esxi_hostname: "{{ esxhost | default('p1-lab-esx01.labs.p1technologies.com') }}"
           datacenter: "{{ vcenter_dc }}"
           name: "{{ name }}"
@@ -68,9 +65,9 @@
       - name: startup after
         vmware_guest:
           validate_certs: no
-          hostname: "{{ vcenter_hostname }}"
-          username: "{{ vcenter_user }}"
-          password: "{{ vcenter_pass }}"
+          hostname: "{{ vc_hname }}"
+          username: "{{ vc_uname }}"
+          password: "{{ vc_passwd }}"
           name: "{{ name }}"
           folder: "{{ vmfolder }}"
           state: poweredon
