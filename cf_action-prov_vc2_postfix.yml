@@ -1,0 +1,18 @@
+---
+  - name: CloudForms Action - Provision VC2 POSTFIX
+    hosts: localhost
+    gather_facts: false
+    connection: local
+    vars:
+      vc1url: "https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job_templates/13/launch/"
+      uname: cloudforms
+      passwd: "C10udF0rm$58"
+    tasks:
+      - name: Launch Ansible Tower template - CF Create VC2 VM
+        uri:
+          url: '{{ vc1url }}'
+          method: POST
+          user: '{{ uname }}'
+          password: '{{ passwd }}'
+          validate_certs: no
+          return_content: yes
