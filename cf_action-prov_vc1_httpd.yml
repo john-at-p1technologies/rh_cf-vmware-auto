@@ -15,5 +15,5 @@
           user: '{{ uname }}'
           password: '{{ passwd }}'
           validate_certs: no
-          return_code: 202
+          return_code: 201
           return_content: yes
