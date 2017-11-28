@@ -15,4 +15,5 @@
           user: '{{ uname }}'
           password: '{{ passwd }}'
           validate_certs: no
+          return_code: 201
           return_content: yes
