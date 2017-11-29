@@ -15,23 +15,24 @@
           user: '{{ uname }}'
           password: '{{ passwd }}'
           validate_certs: no
-          return_code: 201
+          status_code: 201
           return_content: yes
         register: jobout
       - set_fact:
           jobid: "{{ jobout.json.id }}"
       - name: Check Ansible Job status
         uri:
-          url: https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job/{{ jobid }}
+          url: https://john-anstwr3x-a.labs.p1technologies.com/api/v1/jobs/{{ jobid }}
           method: GET
           user: '{{ uname }}'
           password: '{{ passwd }}'
           validate_certs: no
           return_content: yes
         register: jobstat
-        until: jobstat.json.status != "running"
-        retries: 20
+        until: jobstat.json.status != "running" and jobstat.json.status != "waiting" and jobstat.json.status != "pending"
+        retries: 40
         delay: 15
+        failed_when: jobstat.json.status != "successful"
       - set_fact:
           exitstatus: "{{ jobstat.json.status }}"
-      - debug: msg="Job {{ jobid }} completed with status={{ exitstatus }}"
+      - debug: msg="CF Create VC1 VM job={{ jobid }} completed with status={{ exitstatus }}"
