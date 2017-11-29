@@ -4,13 +4,13 @@
     gather_facts: false
     connection: local
     vars:
-      vc1url: "https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job_templates/12/launch/"
+      vcurl: "https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job_templates/12/launch/"
       uname: cloudforms
       passwd: "C10udF0rm$58"
     tasks:
       - name: Launch Ansible Tower template - CF Create VC1 VM
         uri:
-          url: '{{ vc1url }}'
+          url: '{{ vcurl }}'
           method: POST
           user: '{{ uname }}'
           password: '{{ passwd }}'
