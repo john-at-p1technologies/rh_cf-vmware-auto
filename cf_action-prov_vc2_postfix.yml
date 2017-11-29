@@ -4,15 +4,35 @@
     gather_facts: false
     connection: local
     vars:
-      vc1url: "https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job_templates/13/launch/"
+      vcurl: "https://john-anstwr3x-a.labs.p1technologies.com/api/v1/job_templates/12/launch/"
       uname: cloudforms
       passwd: "C10udF0rm$58"
     tasks:
       - name: Launch Ansible Tower template - CF Create VC2 VM
         uri:
-          url: '{{ vc1url }}'
+          url: '{{ vcurl }}'
           method: POST
           user: '{{ uname }}'
           password: '{{ passwd }}'
           validate_certs: no
+          status_code: 201
           return_content: yes
+        register: jobout
+      - set_fact:
+          jobid: "{{ jobout.json.id }}"
+      - name: Check Ansible Job status
+        uri:
+          url: https://john-anstwr3x-a.labs.p1technologies.com/api/v1/jobs/{{ jobid }}
+          method: GET
+          user: '{{ uname }}'
+          password: '{{ passwd }}'
+          validate_certs: no
+          return_content: yes
+        register: jobstat
+        until: jobstat.json.status != "running" and jobstat.json.status != "waiting" and jobstat.json.status != "pending"
+        retries: 40
+        delay: 15
+        failed_when: jobstat.json.status != "successful"
+      - set_fact:
+          exitstatus: "{{ jobstat.json.status }}"
+      - debug: msg="CF Create VC2 VM job={{ jobid }} completed with status={{ exitstatus }}"
