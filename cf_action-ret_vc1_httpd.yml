@@ -29,7 +29,7 @@
           validate_certs: no
           return_content: yes
         register: jobstat
-        until jobstat.json.status != "running" and jobstat.json.status != "waiting" and jobstat.json.status != "pending"
+        until: jobstat.json.status != "running" and jobstat.json.status != "waiting" and jobstat.json.status != "pending"
         retries: 20
         delay: 10
         failed_when: jobstat.json.status != "successful"
